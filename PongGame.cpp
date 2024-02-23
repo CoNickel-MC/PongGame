@@ -2,12 +2,15 @@
 
 class ball {
 	private:
-		int ballXVel;int ballYVel;
-		int collisions;
+		int XVel = 4;int YVel = 4;
+		int collisions = 0;
 	public:
-		int ballX;
-		int ballY;
-		void ballCollision(char collidedWith) {
+		int X = 400; int Y = 275; float Size = 15.0f;
+		void Move() {
+			X += XVel;
+			Y += YVel;
+		};
+		void Collision(char collidedWith) {
 			if (collidedWith == 'u') {
 
 			}
@@ -16,21 +19,54 @@ class ball {
 			}
 
 		};
-		void ballMove() {
 
-		};
 };
+
+class user {
+	private:
+		float YVel = 5.0f;
+	public:
+		float Y = 20;
+		Rectangle Position = { 5,Y,15,75 };
+		void Move(char dir) {
+			if (dir == 'u') {
+				Y -= YVel;
+			}
+			else if (dir == 'd') {
+				Y += YVel;
+			};
+		};
+		void PosUpdate() {
+			Position = { 5,Y,15,75 };
+		};
+
+};
+
+class comp {
+	private:
+		float YVel = 5.0f;
+	public:
+		float Y = 20.0f;
+		Rectangle Position = { 780,Y,15,75 };
+		void Move(char dir) {
+			Y += YVel;
+		};
+		void PosUpdate() {
+			Position = { 780,Y,15,75 };
+		};
+
+};
+
+
 void CollisionCheck() {
 
 };
 int main() {
 	const int winWidth = 800;
 	const int winHeight = 550;
-	float userY = 20.0f;
-	float compY = 20.0f;
-	Rectangle userPosition;
-	Rectangle CompPosition;
-	Rectangle BallPosition;
+	user user;
+	comp comp;
+	ball ball;
 
 
 	InitWindow(winWidth, winHeight, "PongGame");
@@ -39,12 +75,11 @@ int main() {
 
 
 	while (!WindowShouldClose()) {
-		if (IsKeyDown(KEY_S) && userY<(winHeight-80)) {userY += 2.5f;}
-		if (IsKeyDown(KEY_W) &&  userY>(5)) {userY -= 2.5f;}
+		user.PosUpdate();
+		comp.PosUpdate();
+		if (IsKeyDown(KEY_S) && user.Y < (winHeight - 80)) { user.Move('d'); };
+		if (IsKeyDown(KEY_W) && user.Y > (5)) { user.Move('u'); };
 
-
-		userPosition = {5, userY, 15, 75};
-		CompPosition = {winWidth - 20, compY, 15, 75};
 		Camera2D camera = {0};
 		camera.offset = { winWidth / 2.0f, winHeight / 2.0f };
 		camera.rotation = 0.0f;
@@ -52,10 +87,15 @@ int main() {
 		camera.target = { 0,0 };
 
 		BeginDrawing();
-		ClearBackground(RED);
-		DrawRectangleRec({ 2,2,396,546 }, SKYBLUE);
-			DrawRectangleRounded(userPosition, 0.5f, 20.0f, BLUE);					//User paddle
-			DrawRectangleRounded(CompPosition, 0.5f, 20.0f, DARKBLUE);				//Comp paddle
+			ClearBackground(RAYWHITE);
+			DrawRectangleRec({ 2,2,397,546 }, Color{ 120, 180, 255, 255 });
+			DrawRectangleRec({ 401,2,397,546 }, Color{ 100, 200, 255, 255 });
+
+
+
+			DrawCircle(ball.X, ball.Y, ball.Size, YELLOW);
+			DrawRectangleRounded(user.Position, 0.5f, 20, BLUE);					//User paddle
+			DrawRectangleRounded(comp.Position, 0.5f, 20, DARKBLUE);				//Comp paddle
 		EndDrawing();
 	}
 	CloseWindow();
