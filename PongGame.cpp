@@ -37,25 +37,40 @@ class user {
 			};
 		};
 		void PosUpdate() {
-			Position = { 5,Y,15,75 };
+			Position.y = Y;
 		};
 
 };
 
 class comp {
 	private:
-		float YVel = 5.0f;
+		float YVel = 2.5f;
 	public:
 		float Y = 20.0f;
 		Rectangle Position = { 780,Y,15,75 };
 		void Move(char dir) {
-			Y += YVel;
+			if (dir == 'u') {
+				Y -= YVel;
+			}
+			else if (dir == 'd') {
+				Y += YVel;
+			};
 		};
 		void PosUpdate() {
 			Position = { 780,Y,15,75 };
 		};
+		void compMover(int ballY) {
+			if ((Y + 37.5 ) > ballY && Y >5) {
+				Move('u');
+			}
+			else if ((Y + 37.5) < ballY && Y < 470) {
+				Move('d');
+			};
 
+		}
 };
+
+
 
 
 void CollisionCheck() {
@@ -76,7 +91,11 @@ int main() {
 
 	while (!WindowShouldClose()) {
 		user.PosUpdate();
+		comp.compMover(ball.Y);
+		ball.Move();
+		//comp.Move('d');
 		comp.PosUpdate();
+
 		if (IsKeyDown(KEY_S) && user.Y < (winHeight - 80)) { user.Move('d'); };
 		if (IsKeyDown(KEY_W) && user.Y > (5)) { user.Move('u'); };
 
